@@ -4,9 +4,8 @@
 */
 
 
-#include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
-#include <Arduino.h>
+#include <Adafruit_BME280.h>
 #include <Discord_WebHook.h>
 
 Discord_Webhook discord;
