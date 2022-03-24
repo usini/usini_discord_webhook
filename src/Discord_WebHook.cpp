@@ -44,7 +44,7 @@ void Discord_Webhook::addWiFi(const char *ssid, const char *password) {
 void Discord_Webhook::connectWiFi() {
   WiFi.mode(WIFI_STA);
   if (Discord_Webhook::debug) {
-    Serial.print("[WiFi] Connecting WiFi");
+    Serial.println("[WiFi] Connecting WiFi");
   }
   // wait for WiFi connection
   while ((Discord_Webhook::wifi.run() != WL_CONNECTED)) {
@@ -127,7 +127,6 @@ bool Discord_Webhook::send(String content) {
         ok = false;
       }
     }
-    delete client;
   } else {
     if (Discord_Webhook::debug) {
       // This shouldn't happen but anyway it's better to check
