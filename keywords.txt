@@ -1,0 +1,16 @@
+#########################################################
+# Syntax Coloring Map for Usini Discord WebHook Library #
+#########################################################
+# Class Discord_Webhook
+###################################################################
+Discord_Webhook	KEYWORD1
+
+###################################################################
+# Methods and Functions Discord_Webhook
+###################################################################
+begin	KEYWORD2
+addWiFi	KEYWORD2
+connectWiFi KEYWORD2
+disableDebug KEYWORD2
+setTTS KEYWORD2
+send KEYWORD2
