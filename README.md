@@ -1,4 +1,6 @@
 # Usini Discord WebHook
+[![arduino-library-badge](https://www.ardu-badge.com/badge/Discord_WebHook.svg?)](https://www.ardu-badge.com/Discord_WebHook)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/usini/library/Discord_WebHook.svg)](https://registry.platformio.org/libraries/usini/Discord_WebHook)
 
 A simple Arduino Library to send message on Discord using webhook.   
 Based on my previous code https://github.com/maditnerd/discord_test
