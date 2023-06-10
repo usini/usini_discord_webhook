@@ -134,5 +134,6 @@ bool Discord_Webhook::send(String content) {
       ok = false;
     }
   }
+  delete client;
   return ok;
 }
