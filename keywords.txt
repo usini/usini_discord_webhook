@@ -16,3 +16,4 @@ connectWiFi	KEYWORD2
 disableDebug	KEYWORD2
 setTTS	KEYWORD2
 send	KEYWORD2
+sendEmbed KEYWORD2
