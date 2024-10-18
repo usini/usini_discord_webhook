@@ -4,7 +4,7 @@
 
   Copyright (c) 2024 µsini
   Author : Rémi Sarrailh
-  Version : 1.0.0
+  Version : 1.1.0
 
   The MIT License (MIT)
     Permission is hereby granted, free of charge, to any person obtaining a copy
