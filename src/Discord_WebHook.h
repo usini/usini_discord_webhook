@@ -34,6 +34,7 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -48,6 +49,7 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <HTTPClient.h>
+
 #endif
 
 class Discord_Webhook {
@@ -58,8 +60,10 @@ public:
   void disableDebug();
   void setTTS();
   bool send(String content);
+  bool sendEmbed(String title, String description, String color);
 
 private:
+  bool sendRequest(String jsonPayload);
   #ifdef ESP32
     WiFiMulti wifi;
   #endif
