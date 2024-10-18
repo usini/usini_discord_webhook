@@ -13,8 +13,10 @@ void setup() {
   Serial.begin(115200);
   discord.begin(DISCORD_WEBHOOK); // Initialize the Discord_Webhook object
   discord.addWiFi("WiFiName","WiFiPassword"); // Add WiFi credentials (you can add multiples WiFi SSID)
+  // discord.setTTS(true); // Add TTS
   discord.connectWiFi(); // Connect to WiFi
   discord.send("Hello World"); // Send Hello World to Discord
+  discord.sendEmbed("Title","Description","65280"); // Send Hello World Card
 }
 
 void loop() {
