@@ -2,7 +2,7 @@
   Discord_WebHook.h
   Library for sending messages to Discord via WebHook
 
-  Copyright (c) 2022 µsini
+  Copyright (c) 2024 µsini
   Author : Rémi Sarrailh
   Version : 1.0.0
 
