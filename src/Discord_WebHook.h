@@ -60,7 +60,7 @@ public:
   void disableDebug();
   void setTTS();
   bool send(String content);
-  bool sendEmbed(String title, String description, String color);
+  bool sendEmbed(String title, String description, String imageUrl, String color);
 
 private:
   bool sendRequest(String jsonPayload);

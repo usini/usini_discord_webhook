@@ -77,9 +77,12 @@ bool Discord_Webhook::send(String content)
   return Discord_Webhook::sendRequest("{\"content\":\"" + content + "\"");
 }
 
-bool Discord_Webhook::sendEmbed(String title, String description, String color)
+bool Discord_Webhook::sendEmbed(String title, String description, String imageUrl, String color)
 {
-  String embedContent = "{\"embeds\":[{\"title\":\"" + title + "\",\"description\":\"" + description + "\",\"color\":" + color + "}]";
+  String embedContent = "{\"embeds\":[{\"title\":\"" + title +
+  "\",\"description\":\"" + description +
+  "\",\"color\":" + color +
+  ",\"image\":{\"url\":\"" + imageUrl + "\"}}]";
   return Discord_Webhook::sendRequest(embedContent);
 }
 
