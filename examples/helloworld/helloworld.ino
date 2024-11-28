@@ -16,7 +16,8 @@ void setup() {
   // discord.setTTS(true); // Add TTS
   discord.connectWiFi(); // Connect to WiFi
   discord.send("Hello World"); // Send Hello World to Discord
-  discord.sendEmbed("Title","Description","65280"); // Send Hello World Card
+  discord.sendEmbed("Title","Description","#65280"); // Send Card (grey color)
+  discord.sendEmbedImage("Title","Description","#65280", "https://source.unsplash.com/random/200x200"); // Send Card with imageUrl
 }
 
 void loop() {

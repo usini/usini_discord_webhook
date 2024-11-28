@@ -4,7 +4,7 @@
 
   Copyright (c) 2024 µsini
   Author : Rémi Sarrailh
-  Version : 1.1.0
+  Version : 2.0.0
 
   The MIT License (MIT)
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,6 +46,7 @@
 #else
 // We still open it as ESP32 for compatibility with later version (not tested)
 #warning "Library worked on ESP8266/ESP32 only"
+#warning "Compilation pour une carte non supportée"
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <HTTPClient.h>
@@ -60,7 +61,9 @@ public:
   void disableDebug();
   void setTTS();
   bool send(String content);
-  bool sendEmbed(String title, String description, String imageUrl, String color);
+  bool sendEmbed(String title, String description, String hexColor);
+  bool sendEmbedImage(String title, String description, String imageUrl, String hexColor);
+  bool sendFile(uint8_t* imageData, size_t imageLength, const String& filename, const String& contentType = "image/jpeg");
 
 private:
   bool sendRequest(String jsonPayload);

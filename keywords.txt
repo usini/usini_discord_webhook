@@ -17,3 +17,6 @@ disableDebug	KEYWORD2
 setTTS	KEYWORD2
 send	KEYWORD2
 sendEmbed KEYWORD2
+sendEmdedImage KEYWORD2
+sendFile KEYWORD2
+
