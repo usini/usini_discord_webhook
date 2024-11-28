@@ -9,5 +9,11 @@ Compatible with ESP32/8266
 
 Check **examples** to learn how to use it
 
-This software is written by Rémi Sarrailh for µsini and is licensed under the MIT license.   
+This software is written by Rémi Sarrailh for µsini and is licensed under the MIT license.  
+
+Contributors:
+* [pxsty0](https://github.com/pxsty0/DisCard) Support for card 
+* [vollukas](https://github.com/vollukas) Send file (images)
+* [py7hon](https://github.com/py7hon) - HexColor / Embded Image URL
+
 Check License.txt for more information
