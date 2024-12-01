@@ -53,7 +53,7 @@
 
 class Discord_Webhook {
 public:
-  void begin(String webhook_url);
+  void begin(String channel_id, String token);
   void addWiFi(const char* ssid, const char* password);
   void connectWiFi();
   void disableDebug();

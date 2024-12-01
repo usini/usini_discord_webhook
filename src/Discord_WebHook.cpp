@@ -27,8 +27,8 @@
 #include "Discord_WebHook.h"
 
 // Get webhook URL
-void Discord_Webhook::begin(String webhook_url) {
-  Discord_Webhook::webhook_url = webhook_url;
+void Discord_Webhook::begin(String channel_id, String token) {
+  Discord_Webhook::webhook_url = "https://discord.com/api/webhooks/" + channel_id + "/" + token;;
 }
 
 // Add WiFi credentials
