@@ -29,7 +29,7 @@
 
 #include <Arduino.h>
 
-// Define if it is an ESP32 (code should works on new board ESP32-S2/ESP32-C3)
+// Define platform-specific dependencies
 #if defined(ESP32)
 #include <WiFi.h>
 #include <WiFiMulti.h>
@@ -41,16 +41,14 @@
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
-//#include "WiFiClientSecureAxTLS.h"
-#include <ESP8266HTTPClient.h>
-#else
-// We still open it as ESP32 for compatibility with later version (not tested)
-#warning "Library worked on ESP8266/ESP32 only"
-#warning "Compilation pour une carte non supportée"
+
+#elif defined(ARDUINO_ARCH_RP2040) // Experimental For Raspberry Pi Pico W
 #include <WiFi.h>
-#include <WiFiMulti.h>
+#include <WiFiClientSecure.h>
 #include <HTTPClient.h>
 
+#else
+#error "This library supports ESP32, ESP8266, and Raspberry Pi Pico W only."
 #endif
 
 class Discord_Webhook {
@@ -67,12 +65,18 @@ public:
 
 private:
   bool sendRequest(String jsonPayload);
+
+#if defined(ESP32) || defined(ESP8266)
   #ifdef ESP32
     WiFiMulti wifi;
   #endif
   #ifdef ESP8266
     ESP8266WiFiMulti wifi;
   #endif
+#elif defined(ARDUINO_ARCH_RP2040)
+  // No multi-AP feature yet for RP2040
+#endif
+
   String webhook_url;
   bool tts = false;
   bool debug = true;
