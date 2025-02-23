@@ -28,7 +28,7 @@
 
 // Get webhook URL
 void Discord_Webhook::begin(String channel_id, String token) {
-  Discord_Webhook::webhook_url = "https://discord.com/api/webhooks/" + channel_id + "/" + token;
+  Discord_Webhook::webhook_url = "https://discordapp.com/api/webhooks/" + channel_id + "/" + token;
 }
 
 // Add WiFi credentials
