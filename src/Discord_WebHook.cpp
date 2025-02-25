@@ -1,70 +1,79 @@
 /*
- *  Discord_WebHook.cpp
- *  Library for sending messages to Discord via WebHook
- *
- *  Copyright (c) 2024 µsini
- *  Author : Rémi Sarrailh
- *  Version : 2.0.0
- *
- *  The MIT License (MIT)
- *    Permission is hereby granted, free of charge, to any person obtaining a copy
- *    of this software and associated documentation files (the "Software"), to
- *  deal in the Software without restriction, including without limitation the
- *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- *  sell copies of the Software, and to permit persons to whom the Software is
- *    furnished to do so, subject to the following conditions:
- *    The above copyright notice and this permission notice shall be included in
- *    all copies or substantial portions of the Software.
- *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
- */
+  Discord_WebHook.cpp
+  Library for sending messages to Discord via WebHook
+
+  Copyright (c) 2024 µsini
+  Author : Rémi Sarrailh
+  Version : 2.0.0
+
+  The MIT License (MIT)
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 
 #include "Discord_WebHook.h"
 
-
-// Get webhook url into webhook_url
-void Discord_Webhook::begin(String webhook_url)
-{
-  Discord_Webhook::webhook_url = webhook_url;
+// Get webhook URL
+void Discord_Webhook::begin(String channel_id, String token) {
+  Discord_Webhook::webhook_url = "https://discordapp.com/api/webhooks/" + channel_id + "/" + token;
 }
 
-// Add WiFi credentials using WiFiMulti
-void Discord_Webhook::addWiFi(const char *ssid, const char *password)
-{
-  if (Discord_Webhook::debug)
-  {
-    Serial.print("[WIFI] Added ssid:");
-    Serial.println(ssid);
-  }
-  Discord_Webhook::wifi.addAP(ssid, password);
-}
-
-// Wait for WiFi connection to established
-void Discord_Webhook::connectWiFi()
-{
-  WiFi.mode(WIFI_STA);
-  if (Discord_Webhook::debug)
-  {
-    Serial.println("[WiFi] Connecting WiFi");
-  }
-  // wait for WiFi connection
-  while ((Discord_Webhook::wifi.run() != WL_CONNECTED))
-  {
-    if (Discord_Webhook::debug)
-    {
-      Serial.print(".");
+// Add WiFi credentials
+void Discord_Webhook::addWiFi(const char* ssid, const char* password) {
+  #if defined(ESP32) || defined(ESP8266)
+    if (Discord_Webhook::debug) {
+      Serial.print("[WIFI] Added ssid: ");
+      Serial.println(ssid);
     }
-    delay(100);
-  }
-  if (Discord_Webhook::debug)
-  {
-    Serial.println("[WiFi] Connected");
-  }
+    wifi.addAP(ssid, password);
+  #elif defined(ARDUINO_ARCH_RP2040) // Experimental For Raspberry Pi Pico W
+    WiFi.begin(ssid, password);
+  #endif
+}
+
+// Connect to WiFi
+void Discord_Webhook::connectWiFi() {
+  #if defined(ESP32) || defined(ESP8266)
+    WiFi.mode(WIFI_STA);
+    if (Discord_Webhook::debug) {
+      Serial.println("[WiFi] Connecting WiFi");
+    }
+    while (wifi.run() != WL_CONNECTED) {
+      delay(100);
+      if (Discord_Webhook::debug) {
+        Serial.print(".");
+      }
+    }
+    if (Discord_Webhook::debug) {
+      Serial.println("[WiFi] Connected");
+    }
+  #elif defined(ARDUINO_ARCH_RP2040) // Experimental For Raspberry Pi Pico W
+    if (Discord_Webhook::debug) {
+      Serial.println("[WiFi] Connecting WiFi");
+    }
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(100);
+      if (Discord_Webhook::debug) {
+        Serial.print(".");
+      }
+    }
+    if (Discord_Webhook::debug) {
+      Serial.println("[WiFi] Connected");
+    }
+  #endif
 }
 
 // Set TTS variable
@@ -94,48 +103,39 @@ bool Discord_Webhook::sendFile(uint8_t *fileData, size_t fileLength, const Strin
 
     String bodyEnd = "\r\n--" + boundary + "--\r\n";
 
-    int contentLength = bodyStart.length() + fileLength + bodyEnd.length();
-
     if (Discord_Webhook::debug)
     {
       Serial.println("[HTTP] Connecting to Discord...");
-      Serial.println("[HTTP] Content-Length: " + String(contentLength));
+      Serial.println("[HTTP] File Upload Start");
     }
 
     // Begin HTTPS requests
     if (https.begin(*client, Discord_Webhook::webhook_url))
     {
       https.addHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-      https.addHeader("Content-Length", String(contentLength));
 
-      // Create the full body
-      String body = bodyStart;
-      body += String((char *)fileData, fileLength);
-      body += bodyEnd;
-
-      // Send POST request
-      int httpCode = https.POST((uint8_t *)body.c_str(), body.length());
-      if (httpCode > 0)
+      // Send POST request in chunks
+      https.collectHeaders(nullptr, 0); // Ensure no automatic content collection
+      if (https.POST((uint8_t *)bodyStart.c_str(), bodyStart.length()) == HTTP_CODE_OK)
       {
+        // Write binary file data directly
+        client->write(fileData, fileLength); 
+
+        // Write the body end
+        client->write((uint8_t *)bodyEnd.c_str(), bodyEnd.length());
+
         if (Discord_Webhook::debug)
         {
-          Serial.printf("[HTTP] POST... code: %d\n", httpCode);
-          if (httpCode == HTTP_CODE_OK)
-          {
-            Serial.println("[HTTP] POST... success");
-            ok = true;
-          }
-          else
-          {
-            Serial.printf("[HTTP] ERROR: %s\n", https.getString().c_str());
-          }
+          Serial.println("[HTTP] File Upload Complete");
         }
+
+        ok = true;
       }
       else
       {
         if (Discord_Webhook::debug)
         {
-          Serial.printf("[HTTP] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
+          Serial.println("[HTTP] POST Error");
         }
       }
       https.end();
