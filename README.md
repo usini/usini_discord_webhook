@@ -5,7 +5,7 @@
 A simple Arduino Library to send message on Discord using webhook.   
 Based on my previous code https://github.com/maditnerd/discord_test
 
-Compatible with ESP32/8266
+Compatible with ESP32/8266/Raspberry PI Pico W
 
 Check **examples** to learn how to use it
 
@@ -14,6 +14,6 @@ This software is written by Rémi Sarrailh for µsini and is licensed under the 
 Contributors:
 * [pxsty0](https://github.com/pxsty0/DisCard) Support for card 
 * [vollukas](https://github.com/vollukas) Send file (images)
-* [py7hon](https://github.com/py7hon) - HexColor / Embded Image URL
+* [py7hon](https://github.com/py7hon) - HexColor / Embded Image URL / Raspberry Pi Pico W Support / Channel ID
 
 Check License.txt for more information
