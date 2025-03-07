@@ -181,6 +181,35 @@ bool Discord_Webhook::sendEmbedImage(String title, String description, String he
   return Discord_Webhook::sendRequest(embedContent);
 }
 
+
+// Add embed with fields support
+bool Discord_Webhook::sendEmbedFields(String title, String description,
+  String hexColor, String fieldsJson,
+  String imageUrl) {
+  long colorValue = strtol(hexColor.startsWith("#") ?
+    hexColor.substring(1).c_str() : hexColor.c_str(),
+    nullptr, 16);
+
+  String embed = "{\"title\":\"" + title +
+    "\",\"description\":\"" + description +
+    "\",\"color\":" + String(colorValue);
+
+  // Add fields if provided
+  if (!fieldsJson.isEmpty()) {
+    embed += ",\"fields\":" + fieldsJson;
+  }
+
+  // Add image if provided
+  if (!imageUrl.isEmpty()) {
+    embed += ",\"image\":{\"url\":\"" + imageUrl + "\"}";
+  }
+
+  embed += "}";
+  String payload = "{\"embeds\":[" + embed + "]}";
+
+  return sendRequest(payload);
+}
+
 // Send message to Discord, we disable SSL certificate verification for ease of
 // use (Warning: this is insecure)
 bool Discord_Webhook::sendRequest(String jsonPayload)
