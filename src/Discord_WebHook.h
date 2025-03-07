@@ -61,6 +61,7 @@ public:
   bool send(String content);
   bool sendEmbed(String title, String description, String hexColor);
   bool sendEmbedImage(String title, String description, String imageUrl, String hexColor);
+  bool sendEmbedFields(String title, String description, String hexColor, String fieldsJson, String imageUrl = "");
   bool sendFile(uint8_t* imageData, size_t imageLength, const String& filename, const String& contentType = "image/jpeg");
 
 private:

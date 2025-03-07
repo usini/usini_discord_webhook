@@ -19,4 +19,5 @@ send	KEYWORD2
 sendEmbed KEYWORD2
 sendEmdedImage KEYWORD2
 sendFile KEYWORD2
+sendEmbedFields KEYWORD2
 
